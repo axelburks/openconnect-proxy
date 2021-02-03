@@ -1,6 +1,6 @@
-# openconnect + tinyproxy + microsocks
+# openconnect + microsocks
 
-This Docker image contains an [openconnect client](http://www.infradead.org/openconnect/) (version 8.04 with pulse/juniper support) and the [tinyproxy proxy server](https://tinyproxy.github.io/) for http/https connections (default on port 8888) and the [microsocks proxy](https://github.com/rofl0r/microsocks) for socks5 connections (default on port 8889) in a very small [alpine linux](https://www.alpinelinux.org/) image (around 20 MB).
+This Docker image contains an [openconnect client](http://www.infradead.org/openconnect/) (version 8.10 with pulse/juniper support) and the [microsocks proxy](https://github.com/rofl0r/microsocks) for socks5 connections (default on port 8889) in a very small [alpine linux](https://www.alpinelinux.org/) image (around 20 MB).
 
 You can find the image on docker hub:
 https://hub.docker.com/r/cbwang/openconnect-proxy
@@ -32,9 +32,9 @@ Optionally set a multi factor authentication code:
 To start the container in foreground run:
 
 	docker run -it --rm --privileged --env-file=.env \
-	  -p 8888:8888 -p 8889:8889 cbwang/openconnect-proxy:latest
+	  -p 8889:8889 cbwang/openconnect-proxy:latest
 
-The proxies are listening on ports 8888 (http/https) and 8889 (socks). Either use `--net host` or `-p <local port>:8888 -p <local port>:8889` to make the proxy ports available on the host.
+The proxies are listening on ports 8889 (socks). Either use `--net host` or `-p <local port>:8889` to make the proxy ports available on the host.
 
 Without using a `.env` file set the environment variables on the command line with the docker run option `-e`:
 
@@ -61,7 +61,6 @@ In daemon mode you can view the stderr log with `docker logs`:
 	  env_file:
 	    - .env
 	  ports:
-	    - 8888:8888
 	    - 8889:8889
 	  cap_add:
 	    - NET_ADMIN
@@ -87,16 +86,7 @@ Keep in mind that `networks`, `extra_hosts`, etc. and `network_mode` are mutuall
 # Configure proxy
 
 The container is connected via _openconnect_ and now you can configure your browser
-and other software to use one of the proxies (8888 for http/https or 8889 for socks).
-
-For example FoxyProxy (available for Firefox, Chrome) is a suitable browser extension.
-
-You may also set environment variables:
-
-	export http_proxy="http://127.0.0.1:8888/"
-	export https_proxy="http://127.0.0.1:8888/"
-
-composer, git (if you don't use the git+ssh protocol, see below) and others use these.
+and other software to use one of the proxies (8889 for socks).
 
 # ssh through the proxy
 
@@ -120,21 +110,9 @@ or (depending on your ncat version)
 and your connection will be passed through the proxy.
 The above example is for using git with ssh keys.
 
-## corkscrew 
-
-An alternative is _corkscrew_ (e.g. install with `brew install corkscrew` on mac OS)
-
-	Host <hostname>
-		ProxyCommand            corkscrew 127.0.0.1 8888 %h %p
-
 # Build
 
 You can build the container yourself with
 
 	docker build -f build/Dockerfile -t cbwang/openconnect-proxy:custom ./build
-
-# Support
-
-You like using my work? Get something for me (surprise! surprise!) from my wishlist on [Amazon](https://smile.amazon.de/hz/wishlist/ls/307SIOOD654GF/) or [help me pay](https://www.paypal.me/wazum) the next pizza or Pho soup (mjam). Thanks a lot!
-
 

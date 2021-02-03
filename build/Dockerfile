@@ -44,26 +44,27 @@ FROM alpine:${ALPINE_VERSION}
 # Copy binary from build container.
 COPY --from=builder /tmp/microsocks-bin/microsocks /usr/local/bin/microsocks
 
-RUN apk add --no-cache libcrypto1.1 libssl1.1 libstdc++ tinyproxy nettle --repository http://dl-cdn.alpinelinux.org/alpine/edge/main
+# RUN apk add --no-cache libcrypto1.1 libssl1.1 libstdc++ tinyproxy nettle --repository http://dl-cdn.alpinelinux.org/alpine/edge/main
+RUN apk add --no-cache libcrypto1.1 libssl1.1 libstdc++ nettle --repository http://dl-cdn.alpinelinux.org/alpine/edge/main
 RUN apk add --no-cache oath-toolkit-libpskc openconnect --repository http://dl-cdn.alpinelinux.org/alpine/edge/community
 
-# add vpn-slice with dependencies (dig) https://github.com/dlenski/vpn-slice
-RUN apk add --no-cache python3 bind-tools && pip3 install --upgrade pip \
-    && pip3 install https://github.com/dlenski/vpn-slice/archive/master.zip \
-    # always add the docker DNS server
-    && grep -qxF 'nameserver 127.0.0.11' /etc/resolv.conf || echo 'nameserver 127.0.0.11' >> /etc/resolv.conf
+# # add vpn-slice with dependencies (dig) https://github.com/dlenski/vpn-slice
+# RUN apk add --no-cache python3 bind-tools && pip3 install --upgrade pip \
+#     && pip3 install https://github.com/dlenski/vpn-slice/archive/master.zip \
+#     # always add the docker DNS server
+#     && grep -qxF 'nameserver 127.0.0.11' /etc/resolv.conf || echo 'nameserver 127.0.0.11' >> /etc/resolv.conf
 
 # Use an up-to-date version of vpnc-script
 # https://www.infradead.org/openconnect/vpnc-script.html
-COPY vpnc-script /etc/vpnc/vpnc-script
-RUN chmod 755 /etc/vpnc/vpnc-script
+# COPY vpnc-script /etc/vpnc/vpnc-script
+# RUN chmod 755 /etc/vpnc/vpnc-script
 
-COPY tinyproxy.conf /etc/tinyproxy.conf
+# COPY tinyproxy.conf /etc/tinyproxy.conf
 
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
-EXPOSE 8888
+# EXPOSE 8888
 EXPOSE 8889
 
 ENTRYPOINT ["/entrypoint.sh"]
