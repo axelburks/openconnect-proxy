@@ -7,18 +7,18 @@ RUN apk add --no-cache nettle --repository http://dl-cdn.alpinelinux.org/alpine/
 # openconnect is not yet available on main
 RUN apk add --no-cache openconnect tinyproxy --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing
 
-RUN apk add --no-cache ca-certificates wget \
-    && wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub \
-    && wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.30-r0/glibc-2.30-r0.apk \
-    && apk add --no-cache --virtual .build-deps glibc-2.30-r0.apk gcc make musl-dev \
-    && cd /tmp \
+RUN apk add --no-cache ca-certificates wget
+RUN wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub
+RUN wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.32-r0/glibc-2.32-r0.apk
+RUN apk add --no-cache --virtual .build-deps glibc-2.32-r0.apk gcc make musl-dev
+RUN cd /tmp \
     && wget https://github.com/rofl0r/microsocks/archive/v1.0.1.tar.gz \
     && tar -xzvf v1.0.1.tar.gz \
     && cd microsocks-1.0.1 \
     && make \
-    && make install \
+    && make install
     # add vpn-slice with dependencies (dig) https://github.com/dlenski/vpn-slice
-    && apk add --no-cache python3 bind-tools && pip3 install --upgrade pip \
+RUN apk add --no-cache python3 bind-tools && pip3 install --upgrade pip \
     && pip3 install https://github.com/dlenski/vpn-slice/archive/master.zip \
     # always add the docker DNS server
     && grep -qxF 'nameserver 127.0.0.11' /etc/resolv.conf || echo 'nameserver 127.0.0.11' >> /etc/resolv.conf \
