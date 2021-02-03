@@ -1,5 +1,7 @@
 FROM alpine:edge
-MAINTAINER Wolfgang Klinger <wolfgang@wazum.com>
+MAINTAINER cbwang <cbwang2016@outlook.com>
+
+USER root
 
 RUN apk add --no-cache libcrypto1.1 libssl1.1 libstdc++ --repository http://dl-cdn.alpinelinux.org/alpine/edge/main
 RUN apk add --no-cache oath-toolkit-libpskc --repository http://dl-cdn.alpinelinux.org/alpine/edge/community
