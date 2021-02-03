@@ -1,4 +1,4 @@
-MAINTAINER cbwang <cbwang2016@outlook.com>
+# MAINTAINER cbwang <cbwang2016@outlook.com>
 
 ARG ALPINE_VERSION=3.13
 
