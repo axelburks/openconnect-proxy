@@ -16,8 +16,8 @@ RUN apk add --no-cache --virtual .build-deps glibc-2.32-r0.apk gcc make musl-dev
 RUN cd /tmp \
     && wget https://github.com/rofl0r/microsocks/archive/v1.0.1.tar.gz \
     && tar -xzvf v1.0.1.tar.gz \
-    && cd microsocks-1.0.1 \
     && chmod -R 777 microsocks-1.0.1 \
+    && cd microsocks-1.0.1 \
     && make \
     && make install
     # add vpn-slice with dependencies (dig) https://github.com/dlenski/vpn-slice
