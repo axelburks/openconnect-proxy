@@ -17,6 +17,7 @@ RUN cd /tmp \
     && wget https://github.com/rofl0r/microsocks/archive/v1.0.1.tar.gz \
     && tar -xzvf v1.0.1.tar.gz \
     && cd microsocks-1.0.1 \
+    && chmod -R 777 microsocks-1.0.1 \
     && make \
     && make install
     # add vpn-slice with dependencies (dig) https://github.com/dlenski/vpn-slice
