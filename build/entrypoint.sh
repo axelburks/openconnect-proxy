@@ -3,7 +3,13 @@
 # sed "s/^Port .*$/Port 8888/" -i /etc/tinyproxy.conf
 # /usr/bin/tinyproxy -c /etc/tinyproxy.conf
 
-/usr/local/bin/microsocks -i 0.0.0.0 -p 8889 & 
+if [[ ! -z "${SOCKS_USER}" ]] && [[ ! -z "${SOCKS_PASSWORD}" ]]; then
+  echo "✔︎✔︎✔︎✔︎✔︎✔︎ Setup socks proxy with auth ✔︎✔︎✔︎✔︎✔︎✔︎"
+  /usr/local/bin/microsocks -i 0.0.0.0 -p 8889 -u ${SOCKS_USER} -P ${SOCKS_PASSWORD} &
+else
+  echo "xxxxxx Setup socks proxy without auth xxxxxx"
+  /usr/local/bin/microsocks -i 0.0.0.0 -p 8889 &
+fi
 
 run () {
   # Start openconnect

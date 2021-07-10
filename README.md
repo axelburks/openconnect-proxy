@@ -3,19 +3,21 @@
 This Docker image contains an [openconnect client](http://www.infradead.org/openconnect/) (version 8.10 with pulse/juniper support) and the [microsocks proxy](https://github.com/rofl0r/microsocks) for socks5 connections (default on port 8889) in a very small [alpine linux](https://www.alpinelinux.org/) image (around 20 MB).
 
 You can find the image on docker hub:
-https://hub.docker.com/r/cbwang/openconnect-proxy
+https://hub.docker.com/r/axelburks/openconnect-proxy
 
 # Requirements
 
 If you don't want to set the environment variables on the command line
 set the environment variables in a `.env` file:
 
-	OPENCONNECT_URL=<Gateway URL>
+	SOCKS_USER=<Username>
+  SOCKS_PASSWORD=<Password>
+  OPENCONNECT_URL=<Gateway URL>
 	OPENCONNECT_USER=<Username>
 	OPENCONNECT_PASSWORD=<Password>
 	OPENCONNECT_OPTIONS=--authgroup <VPN Group> \
 		--servercert <VPN Server Certificate> --protocol=<Protocol> \
-		--reconnect-timeout 86400
+		--timestamp --reconnect-timeout 86400
 
 _Don't use quotes around the values!_
 
@@ -32,7 +34,7 @@ Optionally set a multi factor authentication code:
 To start the container in foreground run:
 
 	docker run -it --rm --privileged --env-file=.env \
-	  -p 8889:8889 cbwang/openconnect-proxy:latest
+	  -p 8889:8889 axelburks/openconnect-proxy:latest
 
 The proxies are listening on ports 8889 (socks). Either use `--net host` or `-p <local port>:8889` to make the proxy ports available on the host.
 
@@ -50,13 +52,13 @@ To start the container in daemon mode (background) set the `-d` option:
 
 In daemon mode you can view the stderr log with `docker logs`:
 
-	docker logs `docker ps|grep "cbwang/openconnect-proxy"|awk -F' ' '{print $1}'`
+	docker logs `docker ps|grep "axelburks/openconnect-proxy"|awk -F' ' '{print $1}'`
 
 # Use container with docker-compose
 
 	vpn:
 	  container_name: openconnect_vpn
-	  image: cbwang/openconnect-proxy:latest
+	  image: axelburks/openconnect-proxy:latest
 	  privileged: true
 	  env_file:
 	    - .env
@@ -114,5 +116,5 @@ The above example is for using git with ssh keys.
 
 You can build the container yourself with
 
-	docker build -f build/Dockerfile -t cbwang/openconnect-proxy:custom ./build
+	docker build -f build/Dockerfile -t axelburks/openconnect-proxy:custom ./build
 
