@@ -1,14 +1,14 @@
 #!/bin/sh
 
-# sed "s/^Port .*$/Port 8888/" -i /etc/tinyproxy.conf
-# /usr/bin/tinyproxy -c /etc/tinyproxy.conf
-
-if [[ ! -z "${SOCKS_USER}" ]] && [[ ! -z "${SOCKS_PASSWORD}" ]]; then
-  echo "✔︎✔︎✔︎✔︎✔︎✔︎ Setup socks proxy with auth ✔︎✔︎✔︎✔︎✔︎✔︎"
-  /usr/local/bin/microsocks -i 0.0.0.0 -p 8889 -u ${SOCKS_USER} -P ${SOCKS_PASSWORD} &
-else
-  echo "xxxxxx Setup socks proxy without auth xxxxxx"
-  /usr/local/bin/microsocks -i 0.0.0.0 -p 8889 &
+microsocks_status=`ps aux | grep microsocks | grep -v grep`
+if [[ -z "${microsocks_status}" ]]; then
+  if [[ ! -z "${SOCKS_USER}" ]] && [[ ! -z "${SOCKS_PASSWORD}" ]]; then
+    echo "✔︎✔︎✔︎✔︎✔︎✔︎ Setup socks proxy with auth ✔︎✔︎✔︎✔︎✔︎✔︎"
+    /usr/local/bin/microsocks -i 0.0.0.0 -p 8889 -u ${SOCKS_USER} -P ${SOCKS_PASSWORD} &
+  else
+    echo "xxxxxx Setup socks proxy without auth xxxxxx"
+    /usr/local/bin/microsocks -i 0.0.0.0 -p 8889 &
+  fi
 fi
 
 run () {
