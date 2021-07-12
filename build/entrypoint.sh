@@ -26,6 +26,7 @@ run () {
 }
 
 until (run); do
+  echo "nameserver 114.114.114.114" > /etc/resolv.conf
   echo "openconnect exited. Restarting process in 60 seconds…" >&2
   sleep 60
 done

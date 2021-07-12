@@ -63,6 +63,8 @@ RUN apk add --no-cache oath-toolkit-libpskc openconnect --repository http://dl-c
 
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
+COPY restart.sh /restart.sh
+RUN chmod +x /restart.sh
 
 # EXPOSE 8888
 EXPOSE 8889
