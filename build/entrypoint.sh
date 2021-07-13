@@ -1,14 +1,21 @@
 #!/bin/sh
 
-microsocks_status=`ps aux | grep microsocks | grep -v grep`
-if [[ -z "${microsocks_status}" ]]; then
-  if [[ ! -z "${SOCKS_USER}" ]] && [[ ! -z "${SOCKS_PASSWORD}" ]]; then
-    echo "✔︎✔︎✔︎✔︎✔︎✔︎ Setup socks proxy with auth ✔︎✔︎✔︎✔︎✔︎✔︎"
-    /usr/local/bin/microsocks -i 0.0.0.0 -p 8889 -u ${SOCKS_USER} -P ${SOCKS_PASSWORD} &
-  else
-    echo "xxxxxx Setup socks proxy without auth xxxxxx"
-    /usr/local/bin/microsocks -i 0.0.0.0 -p 8889 &
-  fi
+if [[ ! -z "${SOCKS_USER}" ]] && [[ ! -z "${SOCKS_PASSWORD}" ]]; then
+  echo "✔︎✔︎✔︎✔︎✔︎✔︎ Setup socks proxy with auth ✔︎✔︎✔︎✔︎✔︎✔︎"
+  /usr/local/bin/microsocks -i 0.0.0.0 -p 8889 -u ${SOCKS_USER} -P ${SOCKS_PASSWORD} &
+else
+  echo "xxxxxx Need SOCKS_USER and SOCKS_PASSWORD env vars. Exit. xxxxxx"
+  exit 1
+fi
+
+if [ -z "${AUTHORIZED_KEYS}" ]; then
+  echo "xxxxxx Need AUTHORIZED_KEYS env var and stop running ssh server xxxxxx"
+else
+  echo "✔︎✔︎✔︎✔︎✔︎✔︎ Setup ssh tunnel with key auth ✔︎✔︎✔︎✔︎✔︎✔︎"
+  echo "${AUTHORIZED_KEYS}" > /root/.ssh/authorized_keys
+  chown root /root/.ssh/authorized_keys
+  chmod 600 /root/.ssh/authorized_keys
+  /usr/sbin/sshd -e
 fi
 
 run () {

@@ -1,13 +1,4 @@
-microsocks_status=`ps aux | grep microsocks | grep -v grep`
-if [[ -z "${microsocks_status}" ]]; then
-  if [[ ! -z "${SOCKS_USER}" ]] && [[ ! -z "${SOCKS_PASSWORD}" ]]; then
-    echo "✔︎✔︎✔︎✔︎✔︎✔︎ Setup socks proxy with auth ✔︎✔︎✔︎✔︎✔︎✔︎"
-    /usr/local/bin/microsocks -i 0.0.0.0 -p 8889 -u ${SOCKS_USER} -P ${SOCKS_PASSWORD} &
-  else
-    echo "xxxxxx Setup socks proxy without auth xxxxxx"
-    /usr/local/bin/microsocks -i 0.0.0.0 -p 8889 &
-  fi
-fi
+#!/bin/sh
 
 openconnect_status=`ps aux | grep openconnect | grep -v grep`
 sleep_status=`ps aux | grep sleep | grep -v grep`

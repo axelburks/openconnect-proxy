@@ -1,6 +1,6 @@
 # openconnect + microsocks
 
-This Docker image contains an [openconnect client](http://www.infradead.org/openconnect/) (version 8.10 with pulse/juniper support) and the [microsocks proxy](https://github.com/rofl0r/microsocks) for socks5 connections (default on port 8889) in a very small [alpine linux](https://www.alpinelinux.org/) image (around 20 MB).
+This Docker image contains an [openconnect client](http://www.infradead.org/openconnect/) (version 8.10 with pulse/juniper support) and the [microsocks proxy](https://github.com/rofl0r/microsocks) for socks5 connections (default on port 8889) and the [openssh](https://www.openssh.com/) for ssh tunnel (default on port 22) in a very small [alpine linux](https://www.alpinelinux.org/) image (around 26 MB).
 
 You can find the image on docker hub:
 https://hub.docker.com/r/axelburks/openconnect-proxy
@@ -10,7 +10,8 @@ https://hub.docker.com/r/axelburks/openconnect-proxy
 If you don't want to set the environment variables on the command line
 set the environment variables in a `.env` file:
 
-	SOCKS_USER=<Username>
+	AUTHORIZED_KEYS=<AUTHORIZED_KEYS>
+  SOCKS_USER=<Username>
   SOCKS_PASSWORD=<Password>
   OPENCONNECT_URL=<Gateway URL>
 	OPENCONNECT_USER=<Username>
@@ -63,7 +64,8 @@ In daemon mode you can view the stderr log with `docker logs`:
 	  env_file:
 	    - .env
 	  ports:
-	    - 8889:8889
+	    - 8990:8889
+      - 8992:22
 	  cap_add:
 	    - NET_ADMIN
 	  networks:
@@ -116,5 +118,5 @@ The above example is for using git with ssh keys.
 
 You can build the container yourself with
 
-	docker build -f build/Dockerfile -t axelburks/openconnect-proxy:custom ./build
+	docker build --no-cache -f build/Dockerfile -t axelburks/openconnect-proxy:custom ./build
 
