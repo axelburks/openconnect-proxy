@@ -32,9 +32,28 @@ run () {
   fi
 }
 
+# Init vars
+if [ -z "${RETRY_INTERVAL}" ]; then
+  RETRY_INTERVAL=60
+fi
+echo $RETRY_INTERVAL > retry_interval.txt
+echo 0 > fail_times.txt
+
+# Running
 until (run); do
+  fail_times=`cat fail_times.txt`
+  retry_interval=`cat retry_interval.txt`
+
+  fail_times=$((fail_times+1))
+  echo $fail_times > fail_times.txt
+
+  if [ $fail_times -gt 5 ]; then
+    retry_interval=$((retry_interval*fail_times))
+    echo $retry_interval > retry_interval.txt
+  fi
+
   echo "nameserver 114.114.114.114" > /etc/resolv.conf
-  echo "openconnect exited. Restarting process in 60 seconds…" >&2
-  sleep 60
+  echo "openconnect exited. Restarting process in $retry_interval seconds…" >&2
+  sleep $retry_interval
 done
 
