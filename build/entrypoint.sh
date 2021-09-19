@@ -54,6 +54,11 @@ until (run); do
 
   echo "nameserver 114.114.114.114" > /etc/resolv.conf
   echo "openconnect exited. Restarting process in $retry_interval seconds…" >&2
+
+  if [[ ! -z "${OPENCONNECT_EXIT_TRIGGER_CMD}" ]]; then
+    sh -c "${OPENCONNECT_EXIT_TRIGGER_CMD}"
+  fi
+
   sleep $retry_interval
 done
 

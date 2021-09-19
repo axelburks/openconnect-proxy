@@ -46,7 +46,7 @@ COPY --from=builder /tmp/microsocks-bin/microsocks /usr/local/bin/microsocks
 
 # RUN apk add --no-cache libcrypto1.1 libssl1.1 libstdc++ tinyproxy nettle --repository http://dl-cdn.alpinelinux.org/alpine/edge/main
 RUN apk add --no-cache libcrypto1.1 libssl1.1 libstdc++ nettle --repository http://dl-cdn.alpinelinux.org/alpine/edge/main
-RUN apk add --no-cache oath-toolkit-libpskc openconnect openssh --repository http://dl-cdn.alpinelinux.org/alpine/edge/community
+RUN apk add --no-cache oath-toolkit-libpskc openconnect openssh curl --repository http://dl-cdn.alpinelinux.org/alpine/edge/community
 
 # # add vpn-slice with dependencies (dig) https://github.com/dlenski/vpn-slice
 # RUN apk add --no-cache python3 bind-tools && pip3 install --upgrade pip \
