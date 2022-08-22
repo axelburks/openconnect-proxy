@@ -8,7 +8,7 @@ https://hub.docker.com/r/axelburks/openconnect-proxy
 # Requirements
 
 If you don't want to set the environment variables on the command line
-set the environment variables in a `.env` file:
+set the environment variables in a `env` file:
 
 	AUTHORIZED_KEYS=<AUTHORIZED_KEYS>
   SOCKS_USER=<Username>
@@ -24,7 +24,7 @@ _Don't use quotes around the values!_
 
 See the [openconnect documentation](https://www.infradead.org/openconnect/manual.html) for available options. 
 
-Either set the password in the `.env` file or leave the variable `OPENCONNECT_PASSWORD` unset, so you get prompted when starting up the container.
+Either set the password in the `env` file or leave the variable `OPENCONNECT_PASSWORD` unset, so you get prompted when starting up the container.
 
 Optionally set a multi factor authentication code:
 
@@ -34,12 +34,12 @@ Optionally set a multi factor authentication code:
 
 To start the container in foreground run:
 
-	docker run -it --rm --privileged --env-file=.env \
+	docker run -it --rm --privileged --env-file=env \
 	  -p 8889:8889 axelburks/openconnect-proxy:latest
 
 The proxies are listening on ports 8889 (socks). Either use `--net host` or `-p <local port>:8889` to make the proxy ports available on the host.
 
-Without using a `.env` file set the environment variables on the command line with the docker run option `-e`:
+Without using a `env` file set the environment variables on the command line with the docker run option `-e`:
 
 	docker run … -e OPENCONNECT_URL=vpn.gateway.com/example \
 	-e OPENCONNECT_OPTIONS='<Openconnect Options>' \
@@ -57,22 +57,21 @@ In daemon mode you can view the stderr log with `docker logs`:
 
 # Use container with docker-compose
 
-	vpn:
-	  container_name: openconnect_vpn
-	  image: axelburks/openconnect-proxy:latest
-	  privileged: true
-	  env_file:
-	    - .env
-	  ports:
-	    - 8990:8889
-      - 8992:22
-	  cap_add:
-	    - NET_ADMIN
-	  networks:
-	    - mynetwork
+version: '3'
+services:
+  vpn:
+    image: 'axelburks/openconnect-proxy:latest'
+    container_name: vpn
+    privileged: true
+    env_file:
+      - ./env
+    ports:
+      - '8990:8889'
+      - '8992:22'
 
 
-Set the environment variables for _openconnect_ in the `.env` file again (or specify another file) and 
+
+Set the environment variables for _openconnect_ in the `env` file again (or specify another file) and 
 map the configured ports in the container to your local ports if you want to access the VPN 
 on the host too when running your containers. Otherwise only the docker containers in the same
 network have access to the proxy ports.
@@ -118,5 +117,4 @@ The above example is for using git with ssh keys.
 
 You can build the container yourself with
 
-	docker build --no-cache -f build/Dockerfile -t axelburks/openconnect-proxy:custom ./build
-
+	version="2.0";docker buildx build --platform linux/amd64,linux/arm/v7,linux/arm64 -f build/Dockerfile -t axelburks/openconnect-proxy:latest -t axelburks/openconnect-proxy:$version ./build
